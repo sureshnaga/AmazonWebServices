@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "www" {
   bucket = "${var.www_domain_name}"
   // Because we want our site to be available on the internet, we set this so
   // anyone can read this bucket.
-  acl    = "public-read"
+  acl    = "private"
   // We also need to create a policy that allows anyone to view the content.
   // This is basically duplicating what we did in the ACL but it's required by
   // AWS. This post: http://amzn.to/2Fa04ul explains why.
@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "www" {
     {
       "Sid":"AddPerm",
       "Effect":"Allow",
-      "Principal": "*",
+      "Principal": "services:ec2.amazonaws.com",
       "Action":["s3:GetObject"],
       "Resource":["arn:aws:s3:::${var.www_domain_name}/*"]
     }
